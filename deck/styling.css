@@ -1,0 +1,56 @@
+.card {
+	text-align: left;
+	color: #3c3c3c;
+	background-color: white;
+}
+
+.from {
+	font-size: 34px;
+	font-weight: 700;
+	line-height: 39px;
+	margin: 0 0 30px;
+}
+
+.translation_label {
+	color: #afafaf;
+	font-size: 17px;	
+	font-weight: 700;
+	margin-bottom: 15px;
+	text-transform: uppercase;
+	line-height: 26px;
+}
+
+.learning {
+	font-size: 24px;
+	font-weight: 700;
+	margin: 0 0 10px;
+}
+
+hr {
+	border: 1px solid #e5e5e5;
+}
+
+.example {
+	font-size: 17px;
+	line-height: 39px;
+	font-weight: 700;
+}
+
+.example_translation {
+	font-size: 17px;
+	font-weight: 400;
+	margin-top: -20px;
+}
+
+.example rt {
+	color: #e5e5e5;
+}
+
+.highlighted {
+	color: #58cc02;
+}
+
+.replay-button { text-decoration: none; display: inline-flex; vertical-align: middle; margin: 3px; }
+.replay-button svg { width: 35px; height: 35px; }
+.replay-button svg circle { fill: #fff; stroke: #fff; }
+.replay-button svg path { fill: #1cb0f6; }
