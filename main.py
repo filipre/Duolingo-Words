@@ -8,6 +8,7 @@ import requests
 import random
 import genanki
 import os.path
+import pickle
 
 # import pykakasi
 from furigana.furigana import split_furigana
@@ -22,6 +23,59 @@ DECK_DIR = "deck"
 
 MODEL_ID = 1722919634  # random.randrange(1 << 30, 1 << 31)
 DECK_ID = 1185877268  # random.randrange(1 << 30, 1 << 31)
+
+
+JAPANESE_SKILLS = [
+    "Hiragana 1",
+    "Hiragana 2",
+    "Hiragana 3",
+    "Hiragana 4",
+    "Greetings",
+    "Katakana 1",
+    "Introduction",
+    "Katakana 2",
+    "Introduction 2",
+    "Katakana 3",
+    "Food 1",
+    "Time",
+    "Routines",
+    "Home 1",
+    "Introduction 3",
+    "Counting",
+    "Family 1",
+    "Restaurant",
+    "Activity 1",
+    "Position",
+    "Vacation 1",
+    "Hobby 1",
+    "Family 2",
+    "Transportation 1",
+    "Clothes 1",
+    "Hobby 2",
+    "Weather 1",
+    "Food 2",
+    "Direction 1",
+    "Food 3",
+    "Dates",
+    "Shopping 1",
+    "People 1",
+    "Activity 2",
+    "Nature 1",
+    "Classroom",
+    "Konbini",
+    "Classroom 2",
+    "Feelings 1",
+    "Direction 2",
+    "Objects",
+    "Shopping 2",
+    "Clothes 2",
+    "Hobby 3",
+    "Classroom 3",
+    "Health 1",
+    "Vacation 2",
+    "Post Office",
+    "Games",
+]
 
 
 def download_tts(tts: str):
@@ -63,13 +117,24 @@ if __name__ == "__main__":
 
     lingo = duolingo.Duolingo(username, password)
     r = lingo.get_vocabulary()
-    vocabs = r["vocab_overview"]
-    print("Vocabulary: ", len(vocabs))
+    online_vocabs = r["vocab_overview"]
+    print("Vocabulary: ", len(online_vocabs))
 
-    for vocab in vocabs[:5]:
+    words_file = Path(ROOT_DIR, OUTPUT_DIR, "words.pickle")
+    local_vocabs = {}
+    if words_file.is_file():
+        with open(words_file, "rb") as f:
+            local_vocabs = pickle.load(f)
+
+    for vocab in online_vocabs:
         word = vocab
         word_id = vocab["id"]
         print(word_id, word["word_string"])
+
+        # use cache if word exists already
+        if word_id in local_vocabs:
+            words[word_id] = local_vocabs[word_id]
+            continue
 
         # Get additional data for current word, such as example sentences
         word_definition = lingo.get_word_definition_by_id(word_id)
@@ -77,10 +142,13 @@ if __name__ == "__main__":
 
         words[word_id] = word
 
+    # Save words for later
+    with open(words_file, "wb") as f:
+        pickle.dump(words, f)
+
     # Download TTS
     Path(ROOT_DIR, OUTPUT_DIR, MEDIA_DIR).mkdir(parents=True, exist_ok=True)
     for word_id, word in words.items():
-
         word_definition = word["word_definition"]
         tts = word_definition.get("tts", None)
         if tts:
@@ -124,6 +192,7 @@ if __name__ == "__main__":
             {"name": "LearningLanguage"},
             {"name": "Pronunciation"},
             {"name": "TTS"},  # [sound:sound.mp3]
+            # {"name": "Level"},
             # Example Sentences
             {"name": "Example_1"},
             {"name": "ExampleTranslation_1"},
@@ -162,11 +231,11 @@ if __name__ == "__main__":
             word_definition["word"],
             word_definition["pronunciation"],
             f"[sound:{word_definition['tts_filename']}]",
+            # JAPANESE_SKILLS.index(word["skill"]),
         ]
         media_files.append(word_definition["tts_local"])
 
         # Example sentences
-
         alternative_forms = word_definition["alternative_forms"]
         for alternative_form in alternative_forms[:3]:
             example_sentence = pronounce(alternative_form["example_sentence"])
@@ -176,11 +245,20 @@ if __name__ == "__main__":
             fields.append(translation)
             # fields.append(tts_local)
             # media_files.append(alternative_form["tts_local"])
+        for i in range(max(0, 3 - len(alternative_forms))):
+            fields.append("")
+            fields.append("")
 
         # Tags
         tags = ["DuolingoWords", word["skill_url_title"]]
 
-        my_note = genanki.Note(guid=word_id, model=my_model, fields=fields, tags=tags)
+        my_note = genanki.Note(
+            guid=word_id,
+            model=my_model,
+            fields=fields,
+            tags=tags
+            # sort_field={"name": "Level"},
+        )
         my_deck.add_note(my_note)
 
     my_package = genanki.Package(my_deck)
