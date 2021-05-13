@@ -1,4 +1,5 @@
 .card {
+	font-family: 'Helvetica', 'Arial', sans-serif;
 	text-align: left;
 	color: #3c3c3c;
 	background-color: white;
@@ -8,7 +9,7 @@
 	font-size: 34px;
 	font-weight: 700;
 	line-height: 39px;
-	margin: 0 0 30px;
+	margin: 0 0 10px;
 }
 
 .translation_label {
@@ -50,7 +51,11 @@ hr {
 	color: #58cc02;
 }
 
+/* Anki Desktop */
 .replay-button { text-decoration: none; display: inline-flex; vertical-align: middle; margin: 3px; }
 .replay-button svg { width: 35px; height: 35px; }
 .replay-button svg circle { fill: #fff; stroke: #fff; }
-.replay-button svg path { fill: #1cb0f6; }
+.replay-button svg path { fill: #1cb0f6; stroke: #1cb0f6; }
+
+/* Ankidroid */
+.replaybutton span svg { fill: #1cb0f6; !important; }
