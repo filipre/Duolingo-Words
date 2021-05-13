@@ -21,8 +21,8 @@ OUTPUT_DIR = "output"
 MEDIA_DIR = "media"
 DECK_DIR = "deck"
 
-MODEL_ID = 1722919634  # random.randrange(1 << 30, 1 << 31)
-DECK_ID = 1185877268  # random.randrange(1 << 30, 1 << 31)
+MODEL_ID = 1335956388  # random.randrange(1 << 30, 1 << 31)
+DECK_ID = 1973287916  # random.randrange(1 << 30, 1 << 31)
 
 
 JAPANESE_SKILLS = [
@@ -187,12 +187,13 @@ if __name__ == "__main__":
         MODEL_ID,
         "Duolingo Japanese Model",
         fields=[
+            # Sorting Field
+            {"name": "Level"},
             # Basic Fields
             {"name": "FromLanguage"},
             {"name": "LearningLanguage"},
             {"name": "Pronunciation"},
             {"name": "TTS"},  # [sound:sound.mp3]
-            # {"name": "Level"},
             # Example Sentences
             {"name": "Example_1"},
             {"name": "ExampleTranslation_1"},
@@ -227,11 +228,11 @@ if __name__ == "__main__":
         word_definition = word["word_definition"]
 
         fields = [
+            str(JAPANESE_SKILLS.index(word["skill"])),
             word_definition["translations"],
             word_definition["word"],
             word_definition["pronunciation"],
             f"[sound:{word_definition['tts_filename']}]",
-            # JAPANESE_SKILLS.index(word["skill"]),
         ]
         media_files.append(word_definition["tts_local"])
 
@@ -256,8 +257,7 @@ if __name__ == "__main__":
             guid=word_id,
             model=my_model,
             fields=fields,
-            tags=tags
-            # sort_field={"name": "Level"},
+            tags=tags,
         )
         my_deck.add_note(my_note)
 
