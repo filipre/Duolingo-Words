@@ -1,39 +1,11 @@
 # Duolingo Words
 
-Download Duolingo Words into usable format (Anki, CSV, ...)
+Export your (Japanese) Duolingo vocabulary into an usable format, e.g. Anki deck
 
-## Development 
+![Example](example.png)
 
-Phase 1: Simple Plugin that creates a deck, downloads sounds, etc. 
-Phase 2: More general class + CLI tool, that download words into any format (CSV, JSON, Anki Deck, ...)
+## Current Progress
 
-## Architecture
-
-```
-Duolingo --- Duolingo Words
-              |- CSV
-              |- Anki Generated Deck
-              |- Anki Plugin
-```
-
-## Ideas
-
-### Anki (using python CLI)
-
-- design similar to Duolingo
-- furigana support
-- example sentences
-- TTS for word and example sentences
-- multiple accounts support
-- deck generation using https://github.com/kerrickstaley/genanki
-
-### CSV (using python CLI)
-
-- list of supported attributes
-
-### Anki Plugin
-
-- Enter Username + Password and download all cards
-- Generate deck automatically
-- use Duolingo Words as download step
-
+- only usable with Japanese language
+- Furigana support but due to missing context, it's not always correct
+- there isn't any CLI yet and the only export format is Anki
